@@ -51,6 +51,6 @@ The server will run on
 # Am Still A Noob Or NewBie Coder 
 <hr>
 
-## If The Suggestions or Errors, Feel Free To Submit An Issue
+## If There Are Suggestions or Errors, Feel Free To Submit An Issue
 
 All Credits [Lord-Samuel](https://github.com/Lord-Samuel)
