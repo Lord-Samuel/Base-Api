@@ -22,7 +22,7 @@ After Installation, Modify as you want
 # Deployment
 If you want to deploy on vercel, add a file named
 
-#### vercel.json. Inside of this file, incert this
+#### vercel.json. Inside of this file, insert this
 
 ```js
 {
