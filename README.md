@@ -1,10 +1,8 @@
+# Rebix Base Api For Serve As A Guide For Developers
+
 ![Image](https://files.catbox.moe/685kie.png)
 
 <hr>
-
-<div style="text-align: center; font-size: 2em;">
-  <strong>Rebix Base API</strong>
-</div>
 
 An API for developers. Built with Node.js and Express.
 
