@@ -1,6 +1,6 @@
 # Rebix Base API
 
-A API for developers. Built with Node.js and Express.
+An API for developers. Built with Node.js and Express.
 
 ## Getting Started (Installation)
 
