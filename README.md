@@ -50,7 +50,7 @@ The server will run on
 
 - api/status
 - api/ping
-- api/deepseek?q=
+- api/llama?q=
 
 
 # Am Still A Noob Or NewBie Coder 
