@@ -27,17 +27,17 @@ router.get('/ping', (req, res) => {
 	})
 })
 
-// Free deepseek API Endpoint
-router.get('/deepseek', async (req, res) => {
+// Free meta ai API Endpoint
+router.get('/llama', async (req, res) => {
 	const q = req.query.q
 
 	try{
-	const requstResponse = await axios.get(`https://api-rebix.vercel.app/api/deepseek-r1?q=${q}`)
-	if (requstResponse.status === 200) {
+	const requstResponse = await axios.get(`https://api-rebix.zone.id/api/llama-meta?q=${q}`)
+	if (requstResponse.status === 200)
 		res.status(200).json({
 			status: true,
 			creator: global.creator,
-			msg: 'Deepseek API is working',
+			msg: 'Meta AI API is working',
 			model: requstResponse.data.model,
 			data: requstResponse.data.response
 		})
@@ -45,14 +45,14 @@ router.get('/deepseek', async (req, res) => {
 		res.status(500).json({
 			status: false,
 			creator: global.creator,
-			msg: 'Deepseek API is not working'
+			msg: 'Meta AI API is not working'
 		})
 	}
 	} catch (error) {
 		res.status(500).json({
 			status: false,
 			creator: global.creator,
-			msg: 'Deepseek API is not working'
+			msg: 'Meta AI API is not working'
 		})
 	}
 })	
