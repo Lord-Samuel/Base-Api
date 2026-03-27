@@ -1,4 +1,4 @@
-global.creator = 'Muhammad teguh'
+global.creator = 'Lord-Samuel'
 global.status = {
 	query: {
         creator: global.creator,
