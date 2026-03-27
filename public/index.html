@@ -3,9 +3,1216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>REST API Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --info: #4895ef;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7ff 0%, #f0f2ff 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo-text h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .logo-text p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .server-status {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 24px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4ade80;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px #4ade80;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Main Content */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .card-header i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.3rem;
+            color: var(--dark);
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: var(--light-gray);
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+        }
+
+        .info-item:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--dark);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95rem;
+        }
+
+        .value-good {
+            color: #10b981;
+        }
+
+        .value-warning {
+            color: #f59e0b;
+        }
+
+        /* Endpoint Cards */
+        .endpoint-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .endpoint-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .endpoint-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .endpoint-method {
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .method-get {
+            background-color: #d1e7dd;
+            color: #0a3622;
+            border: 1px solid #a3cfbb;
+        }
+
+        .method-post {
+            background-color: #cfe2ff;
+            color: #052c65;
+            border: 1px solid #9ec5fe;
+        }
+
+        .endpoint-path {
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        .endpoint-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .endpoint-detail {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .detail-item i {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        /* Deepseek Chat Interface */
+        .deepseek-interface {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: 400px;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .chat-header i {
+            color: #10b981;
+            font-size: 1.5rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background: var(--light-gray);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: var(--radius);
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-user {
+            background: var(--primary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-ai {
+            background: white;
+            color: var(--dark);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .chat-input button {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-input button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .chat-input button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 10px;
+            background: white;
+            border-radius: var(--radius);
+            align-self: flex-start;
+            border: 1px solid var(--light-gray);
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        /* API Tester */
+        .api-tester {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .tester-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .method-select {
+            padding: 12px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            background: white;
+            cursor: pointer;
+            min-width: 120px;
+            transition: all 0.3s;
+        }
+
+        .method-select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .endpoint-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .endpoint-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .send-btn {
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .response-container {
+            margin-top: 20px;
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        #response-status {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .status-success {
+            background: #d1e7dd;
+            color: #0a3622;
+            border: 1px solid #a3cfbb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #58151c;
+            border: 1px solid #f1aeb5;
+        }
+
+        #response-body {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border: 1px solid #333;
+            border-radius: var(--radius);
+            padding: 20px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow: auto;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--gray);
+            border-top: 1px solid var(--light-gray);
+            margin-top: 3rem;
+            background: white;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 10px 0;
+        }
+
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+            background: var(--light-gray);
+            transform: translateY(-2px);
+        }
+
+        .footer-info {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .logo {
+                justify-content: center;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .tester-controls {
+                flex-direction: column;
+            }
+            
+            .endpoint-input {
+                min-width: 100%;
+            }
+            
+            .chat-input {
+                flex-direction: column;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light-gray);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
 </head>
 <body>
-    Hello, World!
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-server"></i>
+                    <div class="logo-text">
+                        <h1>Advanced REST API</h1>
+                        <p>Complete backend solution with AI integration</p>
+                    </div>
+                </div>
+                <div class="server-status">
+                    <div class="status-indicator"></div>
+                    <span>Server is running on port <span id="current-port">3000</span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Server Dashboard -->
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h2>Server Status & Metrics</h2>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-heart"></i>
+                                Status
+                            </span>
+                            <span class="info-value value-good">Healthy & Running</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-microchip"></i>
+                                Memory Usage
+                            </span>
+                            <span class="info-value" id="memory-usage">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-clock"></i>
+                                Server Uptime
+                            </span>
+                            <span class="info-value" id="server-uptime">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-shield-alt"></i>
+                                Rate Limit
+                            </span>
+                            <span class="info-value">2000 req/min</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-plug"></i>
+                                API Endpoints
+                            </span>
+                            <span class="info-value">3 Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-code-branch"></i>
+                    <h2>Available API Endpoints</h2>
+                </div>
+                <div class="card-content">
+                    <div class="endpoint-grid">
+                        <div class="endpoint-card" data-method="GET" data-path="/api/status">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method method-get">GET</span>
+                                <span class="endpoint-path">/api/status</span>
+                            </div>
+                            <div class="endpoint-desc">
+                                Get server status, memory usage, and system information
+                            </div>
+                            <div class="endpoint-detail">
+                                <span class="detail-item">
+                                    <i class="fas fa-bolt"></i>
+                                    Real-time data
+                                </span>
+                                <span class="detail-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    Always available
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="endpoint-card" data-method="GET" data-path="/api/ping">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method method-get">GET</span>
+                                <span class="endpoint-path">/api/ping</span>
+                            </div>
+                            <div class="endpoint-desc">
+                                Simple ping endpoint to check if the server is responding
+                            </div>
+                            <div class="endpoint-detail">
+                                <span class="detail-item">
+                                    <i class="fas fa-heartbeat"></i>
+                                    Health check
+                                </span>
+                                <span class="detail-item">
+                                    <i class="fas fa-rocket"></i>
+                                    Instant response
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="endpoint-card" data-method="GET" data-path="/api/deepseek">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method method-get">GET</span>
+                                <span class="endpoint-path">/api/deepseek</span>
+                            </div>
+                            <div class="endpoint-desc">
+                                AI-powered chat using Deepseek API. Requires query parameter "q"
+                            </div>
+                            <div class="endpoint-detail">
+                                <span class="detail-item">
+                                    <i class="fas fa-robot"></i>
+                                    AI Integration
+                                </span>
+                                <span class="detail-item">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    External API
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deepseek AI Chat Interface -->
+        <div class="deepseek-interface">
+            <div class="chat-header">
+                <i class="fas fa-robot"></i>
+                <h2>Deepseek AI Chat</h2>
+                <span style="margin-left: auto; font-size: 0.85rem; color: var(--gray);">
+                    Powered by Deepseek API
+                </span>
+            </div>
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message message-ai">
+                        <strong>🤖 AI Assistant:</strong> Hello! I'm your Deepseek AI assistant. Ask me anything and I'll help you with your questions!
+                    </div>
+                    <div class="message message-ai">
+                        <strong>💡 Tip:</strong> You can ask about programming, mathematics, science, or any other topic you're curious about.
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="ai-query" placeholder="Type your question here... (e.g., What is JavaScript?)" autocomplete="off">
+                    <button id="send-ai-query">
+                        <i class="fas fa-paper-plane"></i>
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Tester -->
+        <div class="api-tester">
+            <div class="card-header">
+                <i class="fas fa-terminal"></i>
+                <h2>API Testing Console</h2>
+                <span style="margin-left: auto; font-size: 0.85rem; color: var(--gray);">
+                    Test any endpoint directly
+                </span>
+            </div>
+            <div class="tester-controls">
+                <select class="method-select" id="method-select">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+                <input type="text" class="endpoint-input" id="endpoint-input" value="/api/status" placeholder="Enter endpoint path (e.g., /api/status)">
+                <button class="send-btn" id="send-request">
+                    <i class="fas fa-play"></i>
+                    Execute Request
+                </button>
+            </div>
+            
+            <div class="response-container">
+                <div class="response-header">
+                    <h3>Response Details</h3>
+                    <div id="response-status" class="status-success">Ready to test</div>
+                </div>
+                <pre id="response-body">{
+  "message": "Select an endpoint card or enter a path above",
+  "status": "ready"
+}</pre>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h3 style="color: var(--dark); margin-bottom: 10px;">REST API Server</h3>
+                    <p class="footer-info">Built with Node.js, Express.js, and modern web technologies</p>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="/api" target="_blank">
+                        <i class="fas fa-book"></i>
+                        API Documentation
+                    </a>
+                    <a href="/api/status" target="_blank">
+                        <i class="fas fa-heartbeat"></i>
+                        Server Status
+                    </a>
+                    <a href="https://github.com" target="_blank">
+                        <i class="fab fa-github"></i>
+                        GitHub Repository
+                    </a>
+                    <a href="https://expressjs.com" target="_blank">
+                        <i class="fas fa-code"></i>
+                        Express.js Docs
+                    </a>
+                </div>
+                
+                <div class="footer-info">
+                    <p id="creator-info">Loading creator info...</p>
+                    <p>Server Time: <span id="server-time"></span></p>
+                    <p>&copy; 2024 Advanced REST API Server. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize variables
+        let startTime = Date.now();
+        let creatorName = "System Creator";
+        let isAiTyping = false;
+
+        // Get server port from current URL
+        const currentPort = window.location.port || (window.location.protocol === 'https:' ? 443 : 80);
+        document.getElementById('current-port').textContent = currentPort;
+
+        // Format bytes to human readable
+        function formatBytes(bytes, decimals = 2) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        // Format uptime to human readable
+        function formatUptime(seconds) {
+            const days = Math.floor(seconds / (3600 * 24));
+            const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            
+            let result = [];
+            if (days > 0) result.push(`${days}d`);
+            if (hours > 0) result.push(`${hours}h`);
+            if (minutes > 0) result.push(`${minutes}m`);
+            result.push(`${secs}s`);
+            
+            return result.join(' ');
+        }
+
+        // Update server time
+        function updateServerTime() {
+            const now = new Date();
+            document.getElementById('server-time').textContent = 
+                now.toLocaleTimeString() + ' ' + now.toLocaleDateString();
+        }
+
+        // Update server metrics
+        async function updateServerMetrics() {
+            try {
+                const response = await fetch('/api/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Update creator info
+                    creatorName = data.creator || "System Creator";
+                    document.getElementById('creator-info').textContent = 
+                        `Created by: ${creatorName}`;
+                    
+                    // Update memory usage
+                    const usedMem = data.memory.used;
+                    const totalMem = data.memory.total;
+                    const memPercentage = ((usedMem / totalMem) * 100).toFixed(1);
+                    document.getElementById('memory-usage').textContent = 
+                        `${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercentage}%)`;
+                    
+                    // Update uptime
+                    if (data.uptime) {
+                        document.getElementById('server-uptime').textContent = 
+                            formatUptime(data.uptime);
+                    }
+                    
+                    return data;
+                }
+            } catch (error) {
+                console.log('Could not fetch server metrics:', error);
+                document.getElementById('memory-usage').textContent = 'Not available';
+                document.getElementById('server-uptime').textContent = 'Not available';
+            }
+        }
+
+        // Update local uptime counter
+        function updateLocalUptime() {
+            const diff = Date.now() - startTime;
+            const seconds = Math.floor(diff / 1000);
+            document.getElementById('server-uptime').textContent = formatUptime(seconds);
+        }
+
+        // Add message to chat
+        function addMessage(content, isUser = false) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'message-user' : 'message-ai'}`;
+            
+            if (isUser) {
+                messageDiv.innerHTML = `<strong>👤 You:</strong> ${content}`;
+            } else {
+                messageDiv.innerHTML = `<strong>🤖 AI:</strong> ${content}`;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            if (isAiTyping) return;
+            
+            const chatMessages = document.getElementById('chat-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <span></span>
+                <span></span>
+                <span></span>
+            `;
+            
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            isAiTyping = true;
+        }
+
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            isAiTyping = false;
+        }
+
+        // Handle AI chat query
+        async function handleAiQuery(query) {
+            if (!query.trim()) return;
+            
+            // Add user message
+            addMessage(query, true);
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                const encodedQuery = encodeURIComponent(query);
+                const response = await fetch(`/api/deepseek?q=${encodedQuery}`);
+                
+                hideTypingIndicator();
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status && data.data) {
+                        addMessage(data.data);
+                    } else {
+                        addMessage("I apologize, but I couldn't process your request. Please try again.");
+                    }
+                } else {
+                    hideTypingIndicator();
+                    addMessage("Sorry, I'm having trouble connecting to the AI service. Please try again later.");
+                }
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage("Network error. Please check your connection and try again.");
+            }
+        }
+
+        // Handle API test request
+        async function handleApiRequest(method, endpoint) {
+            const responseStatus = document.getElementById('response-status');
+            const responseBody = document.getElementById('response-body');
+            
+            // Show loading state
+            responseStatus.textContent = 'Loading...';
+            responseStatus.className = '';
+            responseBody.textContent = 'Sending request...';
+            
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                };
+                
+                // For POST and PUT requests, add some sample data
+                if (method === 'POST' || method === 'PUT') {
+                    options.body = JSON.stringify({
+                        sample: 'test data',
+                        timestamp: new Date().toISOString(),
+                        requestId: 'test-' + Date.now()
+                    });
+                }
+                
+                const startTime = Date.now();
+                const response = await fetch(endpoint, options);
+                const endTime = Date.now();
+                
+                // Update status indicator
+                const statusText = `${response.status} ${response.statusText}`;
+                responseStatus.textContent = `${statusText} (${endTime - startTime}ms)`;
+                
+                if (response.ok) {
+                    responseStatus.className = 'status-success';
+                } else {
+                    responseStatus.className = 'status-error';
+                }
+                
+                // Parse and display response
+                try {
+                    const data = await response.json();
+                    responseBody.textContent = JSON.stringify(data, null, 2);
+                    
+                    // Update server metrics if we fetched /api/status
+                    if (endpoint.includes('/api/status')) {
+                        updateServerMetrics();
+                    }
+                } catch (jsonError) {
+                    const text = await response.text();
+                    responseBody.textContent = text || 'No response body';
+                }
+                
+            } catch (error) {
+                responseStatus.textContent = 'Network Error';
+                responseStatus.className = 'status-error';
+                responseBody.textContent = `Failed to fetch: ${error.message}`;
+            }
+        }
+
+        // Initialize event listeners
+        function initializeEventListeners() {
+            // Endpoint card click handlers
+            document.querySelectorAll('.endpoint-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const method = this.dataset.method;
+                    const path = this.dataset.path;
+                    
+                    document.getElementById('method-select').value = method;
+                    document.getElementById('endpoint-input').value = path;
+                    
+                    // Auto-execute for GET requests
+                    if (method === 'GET') {
+                        setTimeout(() => handleApiRequest(method, path), 100);
+                    }
+                });
+            });
+
+            // API test button
+            document.getElementById('send-request').addEventListener('click', function() {
+                const method = document.getElementById('method-select').value;
+                const endpoint = document.getElementById('endpoint-input').value;
+                
+                if (endpoint.trim()) {
+                    handleApiRequest(method, endpoint);
+                } else {
+                    alert('Please enter an endpoint path');
+                }
+            });
+
+            // Enter key for endpoint input
+            document.getElementById('endpoint-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('send-request').click();
+                }
+            });
+
+            // AI chat send button
+            document.getElementById('send-ai-query').addEventListener('click', function() {
+                const query = document.getElementById('ai-query').value.trim();
+                if (query) {
+                    handleAiQuery(query);
+                    document.getElementById('ai-query').value = '';
+                }
+            });
+
+            // Enter key for AI chat
+            document.getElementById('ai-query').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('send-ai-query').click();
+                }
+            });
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize event listeners
+            initializeEventListeners();
+            
+            // Fetch initial server metrics
+            updateServerMetrics();
+            
+            // Start local uptime counter
+            setInterval(updateLocalUptime, 1000);
+            
+            // Start server time updater
+            updateServerTime();
+            setInterval(updateServerTime, 1000);
+            
+            // Auto-test the status endpoint
+            setTimeout(() => {
+                handleApiRequest('GET', '/api/status');
+            }, 500);
+            
+            // Add welcome message
+            setTimeout(() => {
+                addMessage("Welcome to the REST API Dashboard! You can test endpoints using the console below or chat with me using the Deepseek AI integration.");
+            }, 1000);
+        });
+
+        // Add some sample endpoints for testing
+        window.sampleEndpoints = {
+            status: { method: 'GET', path: '/api/status' },
+            ping: { method: 'GET', path: '/api/ping' },
+            deepseek: { method: 'GET', path: '/api/deepseek?q=What is Node.js?' }
+        };
+    </script>
 </body>
 </html>
